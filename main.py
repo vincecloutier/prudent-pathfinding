@@ -104,14 +104,14 @@ def h(p1, p2):
     return abs(x1 - x2) + abs(y1 - y2)
 
 #Reconstructs shortest path between start and end to draw
-def reconstruct_path(came_from, current, draw):
+def reconstructPath(came_from, current, draw):
     while current in came_from:
         current = came_from[current]
         current.make_path()
         draw()
 
 #Algorithm Logic
-def algorithm(draw, grid, start, end):
+def aStarAlgo(draw, grid, start, end):
     count = 0
     open_set = PriorityQueue()
     open_set.put((0, count, start))
@@ -125,7 +125,7 @@ def algorithm(draw, grid, start, end):
     open_set_hash = {start}
 
     while not open_set.empty():
-        #Allows user to quit program while algorithm is running
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -133,9 +133,9 @@ def algorithm(draw, grid, start, end):
         current = open_set.get()[2]
         open_set_hash.remove(current)
 
-        #Makes path if current cell is the end cell
+        # Makes path if current cell is the end cell
         if current == end:
-            reconstruct_path(came_from, end, draw)
+            reconstructPath(came_from, end, draw)
             end.make_end()
             return True
 
@@ -159,8 +159,7 @@ def algorithm(draw, grid, start, end):
 
     return False        
 
-#Makes grid of cells
-def make_grid(rows, size):
+def makeGrid(rows, size):
     grid = []
     gap = size // rows
     for i in range(rows):
@@ -168,27 +167,23 @@ def make_grid(rows, size):
         for j in range(rows):
             cell = Cell(i , j, gap, rows)
             grid[i].append(cell)
-
     return grid
 
-#Draws the grid lines onto the Window
-def draw_grid(win, rows, size):
+def drawGrid(win, rows, size):
     gap = size // rows
-    #For loop draws vertical lines
+    # Vertical lines
     for i in range(rows):
-        pygame.draw.line(win, GRAY, (0, i * gap), (size, i * gap))
-        #Draws horizontal lines
+        pygame.draw.line(win, BLACK, (0, i * gap), (size, i * gap))
+        # Horizontal lines
         for j in range(rows):
-            pygame.draw.line(win, GRAY, (j * gap, 0), (j * gap, size))
+            pygame.draw.line(win, BLACK, (j * gap, 0), (j * gap, size))
 
 def draw(win, grid, rows, size):
     win.fill(WHITE)
-
     for row in grid:
         for cell in row:
             cell.draw(win)
-    
-    draw_grid(win, rows, size)
+    drawGrid(win, rows, size)
     pygame.display.update()
 
 def get_clicked_pos(pos, rows, size):
@@ -202,7 +197,7 @@ def get_clicked_pos(pos, rows, size):
 #MAIN LOOP
 def main(win, size):
     ROWS = 50
-    grid = make_grid(ROWS, size)
+    grid = makeGrid(ROWS, size)
 
     #Start/End Cells
     start_cell = None
@@ -248,16 +243,13 @@ def main(win, size):
                         for cell in row:
                             cell.reset()
                             
-
-
-            #SPACEBAR starts the pathfinding algorithm
+            #SPACEBAR starts the pathfinding aStarAlgo
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and start_cell and end_cell:
                     for row in grid:
                         for cell in row:
                             cell.update_neighbors(grid)
-
-                    algorithm(lambda: draw(win, grid, ROWS, size), grid, start_cell, end_cell)
+                    aStarAlgo(lambda: draw(win, grid, ROWS, size), grid, start_cell, end_cell)
 
     pygame.quit()
 main(WIN, SIZE)
