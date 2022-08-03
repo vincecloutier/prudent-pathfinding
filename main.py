@@ -1,7 +1,6 @@
 import pygame
 from queue import PriorityQueue
 
-WIN = pygame.display.set_mode((800, 800))
 pygame.display.set_caption("A* Visualizer")
 
 #Defining RGB Color Codes for our Cells
@@ -15,7 +14,7 @@ PURPLE = (128, 0 , 128) #End
 TURQUOISE = (64, 224, 208) #Path
 
 class Cell:
-    def __init__(self, row, col, size, total_rows):
+    def __init__(self, row, col, size, totalRows):
         self.row = row
         self.col = col
         self.x = row * size
@@ -23,7 +22,7 @@ class Cell:
         self.color = WHITE
         self.neighbors = []
         self.size = size
-        self.total_rows = total_rows
+        self.totalRows = totalRows
 
     #Gets the position of the cell
     def getPos(self):
@@ -69,15 +68,15 @@ class Cell:
         self.color = WHITE
 
     #Draws Cell
-    def draw(self, win):
-        pygame.draw.rect(win, self.color, (self.x, self.y, self.size, self.size))
+    def draw(self, window):
+        pygame.draw.rect(window, self.color, (self.x, self.y, self.size, self.size))
 
     #Checks and updates neighboring Cells
     def update_neighbors(self, grid):
         self.neighbors = []
 
         #DOWN
-        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].isWall():
+        if self.row < self.totalRows - 1 and not grid[self.row + 1][self.col].isWall():
             self.neighbors.append(grid[self.row + 1][self.col])
 
         #UP
@@ -85,15 +84,14 @@ class Cell:
             self.neighbors.append(grid[self.row - 1][self.col])
         
         #RIGHT
-        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].isWall():
+        if self.col < self.totalRows - 1 and not grid[self.row][self.col + 1].isWall():
             self.neighbors.append(grid[self.row][self.col + 1])
 
         #LEFT
         if self.row > 0 and not grid[self.row][self.col - 1].isWall():
             self.neighbors.append(grid[self.row][self.col - 1])
 
-    def __lt__(self, other):
-        return False
+    
 
 #Defining our heuristic to calculate the distance between two points (p1 and p2)
 def h(p1, p2):
@@ -111,50 +109,36 @@ def reconstructPath(came_from, current, draw):
 #Algorithm Logic
 def aStarAlgo(draw, grid, start, end):
     count = 0
-    open_set = PriorityQueue()
-    open_set.put((0, count, start))
+    openSet = PriorityQueue()
+    openSet.put((0, count, start))
     came_from = {}
-
     g = {cell: float("inf") for row in grid for cell in row}
     g[start] = 0
     f = {cell: float("inf") for row in grid for cell in row}
     f[start] = h(start.getPos(), end.getPos())
+    openSetHash = {start}
 
-    open_set_hash = {start}
-
-    while not open_set.empty():
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-        
-        current = open_set.get()[2]
-        open_set_hash.remove(current)
-
-        # Makes path if current cell is the end cell
+    while not openSet.empty():
+        current = openSet.get()[2]
+        openSetHash.remove(current)
         if current == end:
             reconstructPath(came_from, end, draw)
             end.makeEnd()
             return True
-
         for neighbor in current.neighbors:
             tempG = g[current] + 1
-
             if tempG < g[neighbor]:
                 came_from[neighbor] = current
                 g[neighbor] = tempG
                 f[neighbor] = tempG + h(neighbor.getPos(), end.getPos())
-                if neighbor not in open_set_hash:
+                if neighbor not in openSetHash:
                     count += 1
-                    open_set.put((f[neighbor], count, neighbor))
-                    open_set_hash.add(neighbor)
+                    openSet.put((f[neighbor], count, neighbor))
+                    openSetHash.add(neighbor)
                     neighbor.makeOpen()
-
         draw()
-
         if current != start:
             current.makeClosed()
-
     return False        
 
 def makeGrid(rows, size):
@@ -167,21 +151,21 @@ def makeGrid(rows, size):
             grid[i].append(cell)
     return grid
 
-def drawGrid(win, rows, size):
+def drawGrid(window, rows, size):
     gap = size // rows
     # Vertical lines
     for i in range(rows):
-        pygame.draw.line(win, BLACK, (0, i * gap), (size, i * gap))
+        pygame.draw.line(window, BLACK, (0, i * gap), (size, i * gap))
         # Horizontal lines
         for j in range(rows):
-            pygame.draw.line(win, BLACK, (j * gap, 0), (j * gap, size))
+            pygame.draw.line(window, BLACK, (j * gap, 0), (j * gap, size))
 
-def draw(win, grid, rows, size):
-    win.fill(WHITE)
+def draw(window, grid, rows, size):
+    window.fill(WHITE)
     for row in grid:
         for cell in row:
-            cell.draw(win)
-    drawGrid(win, rows, size)
+            cell.draw(window)
+    drawGrid(window, rows, size)
     pygame.display.update()
 
 def getClickedPosition(pos, rows, size):
@@ -192,7 +176,7 @@ def getClickedPosition(pos, rows, size):
     col = x // gap
     return row, col
 
-def main(win, size):
+def main(window, size):
 
     rows = 50
     grid = makeGrid(rows, size)
@@ -201,7 +185,7 @@ def main(win, size):
     run = True
 
     while run:
-        draw(win, grid, rows, size)
+        draw(window, grid, rows, size)
         #Checks for different types of events that may happen
         for event in pygame.event.get():
             #Quit Event
@@ -243,7 +227,8 @@ def main(win, size):
                     for row in grid:
                         for cell in row:
                             cell.update_neighbors(grid)
-                    aStarAlgo(lambda: draw(win, grid, rows, size), grid, startCell, endCell)
+                    aStarAlgo(lambda: draw(window, grid, rows, size), grid, startCell, endCell)
 
     pygame.quit()
-main(WIN, 800)
+
+main(pygame.display.set_mode((800, 800)), 800)
