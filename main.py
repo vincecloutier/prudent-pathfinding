@@ -161,49 +161,33 @@ def main(window, size):
 
     while run:
         draw(window, grid, rows, size)
-        #Checks for different types of events that may happen
         for event in pygame.event.get():
-            #Quit Event
-            if event.type == pygame.QUIT:
-                run = False
-
-            #Left Mouse Click
             if pygame.mouse.get_pressed()[0]:
                 pos = pygame.mouse.get_pos()
                 row, col = getClickedPosition(pos, rows, size)
                 cell = grid[row][col]
-
-                #If Start cell does not exist, make it
                 if not startCell and cell != endCell:
                     startCell = cell
                     startCell.makeStart()
-
-                #If End cell does not exist, make it
                 elif not endCell and cell != startCell:
                     endCell = cell
                     endCell.makeEnd()
-
-                #make barrier cells
                 elif cell != endCell and cell != startCell:
-                    cell.makeWall()
-
-            #if the user clicks c clear the board
+                    cell.makeWall()                         
             elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and startCell and endCell:
+                    for row in grid:
+                        for cell in row:
+                            cell.updateNeighbours(grid)
+                    aStarAlgo(lambda: draw(window, grid, rows, size), grid, startCell, endCell)
                 if event.key == pygame.K_c:
                     startCell = None
                     endCell = None
                     for row in grid:
                         for cell in row:
                             cell.reset()
-                            
-            #SPACEBAR starts the pathfinding aStarAlgo
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and startCell and endCell:
-                    for row in grid:
-                        for cell in row:
-                            cell.updateNeighbours(grid)
-                    aStarAlgo(lambda: draw(window, grid, rows, size), grid, startCell, endCell)
-
+            if event.type == pygame.QUIT:
+                run = False
     pygame.quit()
 
 main(pygame.display.set_mode((800, 800)), 800)
