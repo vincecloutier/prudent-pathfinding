@@ -1,8 +1,6 @@
 import pygame
 from queue import PriorityQueue
 
-pygame.display.set_caption("A* Visualizer")
-
 BLACK = (0 , 0, 0) #Wall
 WHITE = (255, 255, 255) #Empty
 GRAY = (128, 128, 128) #Grid Lines
@@ -110,9 +108,9 @@ def algorithm(draw, grid, start, end):
             current.makeClosed()
     return False        
 
-def makeGrid(size):
+def makeGrid():
     grid = []
-    gap = size // 50
+    gap = 800 // 50
     for i in range(50):
         grid.append([])
         for j in range(50):
@@ -120,38 +118,37 @@ def makeGrid(size):
             grid[i].append(cell)
     return grid
 
-def draw(window, grid, size):
-    gap = size // 50
+def draw(window, grid):
+    gap = 800 // 50
     window.fill(WHITE)
     for row in grid:
         for cell in row:
             cell.draw(window)
     for i in range(50):
-        pygame.draw.line(window, BLACK, (0, i * gap), (size, i * gap))
+        pygame.draw.line(window, BLACK, (0, i * gap), (800, i * gap))
         for j in range(50):
-            pygame.draw.line(window, BLACK, (j * gap, 0), (j * gap, size))
+            pygame.draw.line(window, BLACK, (j * gap, 0), (j * gap, 800))
     pygame.display.update()
 
-def getClickedPosition(pos, size):
-    gap = size // 50
+def getClickedPosition(pos):
+    gap = 800 // 50
     y, x = pos
     row = y // gap
     col = x // gap
     return row, col
 
-def main(window, size):
-
-    grid = makeGrid(size)
+def main():
+    window = pygame.display.set_mode((800, 800))
+    pygame.display.set_caption("A* Visualizer")
+    grid = makeGrid()
     startCell = None
     endCell = None
     run = True
-
     while run:
-        draw(window, grid, size)
+        draw(window, grid)
         for event in pygame.event.get():
             if pygame.mouse.get_pressed()[0]:
-                pos = pygame.mouse.get_pos()
-                row, col = getClickedPosition(pos, size)
+                row, col = getClickedPosition(pygame.mouse.get_pos())
                 cell = grid[row][col]
                 if not startCell and cell != endCell:
                     startCell = cell
@@ -166,7 +163,7 @@ def main(window, size):
                     for row in grid:
                         for cell in row:
                             cell.updateNeighbours(grid)
-                    algorithm(lambda: draw(window, grid, size), grid, startCell, endCell)
+                    algorithm(lambda: draw(window, grid), grid, startCell, endCell)
                 if event.key == pygame.K_c:
                     startCell = None
                     endCell = None
@@ -177,4 +174,4 @@ def main(window, size):
                 run = False
     pygame.quit()
 
-main(pygame.display.set_mode((800, 800)), 800)
+main()
