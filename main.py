@@ -13,7 +13,7 @@ PURPLE = (128, 0 , 128) #End
 TURQUOISE = (64, 224, 208) #Path
 
 class Cell:
-    def __init__(self, row, col, size, totalRows):
+    def __init__(self, row, col, size):
         self.row = row
         self.col = col
         self.x = row * size
@@ -21,7 +21,7 @@ class Cell:
         self.color = WHITE
         self.neighbours = []
         self.size = size
-        self.totalRows = totalRows
+        self.totalRows = 50
 
     def makeClosed(self):
         self.color = RED
@@ -110,30 +110,30 @@ def algorithm(draw, grid, start, end):
             current.makeClosed()
     return False        
 
-def makeGrid(rows, size):
+def makeGrid(size):
     grid = []
-    gap = size // rows
-    for i in range(rows):
+    gap = size // 50
+    for i in range(50):
         grid.append([])
-        for j in range(rows):
-            cell = Cell(i , j, gap, rows)
+        for j in range(50):
+            cell = Cell(i , j, gap)
             grid[i].append(cell)
     return grid
 
-def draw(window, grid, rows, size):
-    gap = size // rows
+def draw(window, grid, size):
+    gap = size // 50
     window.fill(WHITE)
     for row in grid:
         for cell in row:
             cell.draw(window)
-    for i in range(rows):
+    for i in range(50):
         pygame.draw.line(window, BLACK, (0, i * gap), (size, i * gap))
-        for j in range(rows):
+        for j in range(50):
             pygame.draw.line(window, BLACK, (j * gap, 0), (j * gap, size))
     pygame.display.update()
 
-def getClickedPosition(pos, rows, size):
-    gap = size // rows
+def getClickedPosition(pos, size):
+    gap = size // 50
     y, x = pos
     row = y // gap
     col = x // gap
@@ -141,18 +141,17 @@ def getClickedPosition(pos, rows, size):
 
 def main(window, size):
 
-    rows = 50
-    grid = makeGrid(rows, size)
+    grid = makeGrid(size)
     startCell = None
     endCell = None
     run = True
 
     while run:
-        draw(window, grid, rows, size)
+        draw(window, grid, size)
         for event in pygame.event.get():
             if pygame.mouse.get_pressed()[0]:
                 pos = pygame.mouse.get_pos()
-                row, col = getClickedPosition(pos, rows, size)
+                row, col = getClickedPosition(pos, size)
                 cell = grid[row][col]
                 if not startCell and cell != endCell:
                     startCell = cell
@@ -167,7 +166,7 @@ def main(window, size):
                     for row in grid:
                         for cell in row:
                             cell.updateNeighbours(grid)
-                    algorithm(lambda: draw(window, grid, rows, size), grid, startCell, endCell)
+                    algorithm(lambda: draw(window, grid, size), grid, startCell, endCell)
                 if event.key == pygame.K_c:
                     startCell = None
                     endCell = None
