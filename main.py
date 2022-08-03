@@ -1,5 +1,4 @@
 import pygame
-import math
 from queue import PriorityQueue
 
 SIZE = 800 #Window is going to be a square so we only need one variable for both Length and Width
