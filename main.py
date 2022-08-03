@@ -64,29 +64,23 @@ class Cell:
         if self.row > 0 and not grid[self.row][self.col - 1].isWall(): #LEFT
             self.neighbours.append(grid[self.row][self.col - 1])
 
-    
-
-#Defining our heuristic to calculate the distance between two points (p1 and p2)
 def h(p1, p2):
     x1, y1 = p1
     x2, y2 = p2
     return abs(x1 - x2) + abs(y1 - y2)
 
-#Reconstructs shortest path between start and end to draw
 def reconstructPath(cameFrom, current, draw):
     while current in cameFrom:
         current = cameFrom[current]
         current.makePath()
         draw()
 
-#Algorithm Logic
-def aStarAlgo(draw, grid, start, end):
+def algorithm(draw, grid, start, end):
     count = 0
     openSet = PriorityQueue()
     openSet.put((0, count, start))
     openSetHash = {start}
     cameFrom = {}
-
 
     g = {cell: float("inf") for row in grid for cell in row}
     g[start] = 0
@@ -126,27 +120,21 @@ def makeGrid(rows, size):
             grid[i].append(cell)
     return grid
 
-def drawGrid(window, rows, size):
-    gap = size // rows
-    # Vertical lines
-    for i in range(rows):
-        pygame.draw.line(window, BLACK, (0, i * gap), (size, i * gap))
-        # Horizontal lines
-        for j in range(rows):
-            pygame.draw.line(window, BLACK, (j * gap, 0), (j * gap, size))
-
 def draw(window, grid, rows, size):
+    gap = size // rows
     window.fill(WHITE)
     for row in grid:
         for cell in row:
             cell.draw(window)
-    drawGrid(window, rows, size)
+    for i in range(rows):
+        pygame.draw.line(window, BLACK, (0, i * gap), (size, i * gap))
+        for j in range(rows):
+            pygame.draw.line(window, BLACK, (j * gap, 0), (j * gap, size))
     pygame.display.update()
 
 def getClickedPosition(pos, rows, size):
     gap = size // rows
     y, x = pos
-
     row = y // gap
     col = x // gap
     return row, col
@@ -179,7 +167,7 @@ def main(window, size):
                     for row in grid:
                         for cell in row:
                             cell.updateNeighbours(grid)
-                    aStarAlgo(lambda: draw(window, grid, rows, size), grid, startCell, endCell)
+                    algorithm(lambda: draw(window, grid, rows, size), grid, startCell, endCell)
                 if event.key == pygame.K_c:
                     startCell = None
                     endCell = None
