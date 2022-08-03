@@ -240,17 +240,16 @@ def main(win, size):
                 elif cell != end_cell and cell != start_cell:
                     cell.make_barrier()
 
-            #Right Mouse Click/Erase
-            elif pygame.mouse.get_pressed()[2]:
-                pos = pygame.mouse.get_pos()
-                row, col = get_clicked_pos(pos, ROWS, size)
-                cell = grid[row][col]
-                cell.reset()
-
-                if cell == start_cell:
+            #if the user clicks c clear the board
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
                     start_cell = None
-                elif cell == end_cell:
                     end_cell = None
+                    for row in grid:
+                        for cell in row:
+                            cell.reset()
+                            
+
 
             #SPACEBAR starts the pathfinding algorithm
             if event.type == pygame.KEYDOWN:
