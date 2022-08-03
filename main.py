@@ -1,12 +1,10 @@
 import pygame
 from queue import PriorityQueue
 
-SIZE = 800 #Window is going to be a square so we only need one variable for both Length and Width
-WIN = pygame.display.set_mode((SIZE, SIZE)) #Setting Window Size
-pygame.display.set_caption("A* Pathfinding Algorithm Visualizer") #Window Title
+WIN = pygame.display.set_mode((800, 800))
+pygame.display.set_caption("A* Visualizer")
 
 #Defining RGB Color Codes for our Cells
-#THe Color of the cell will let us know what kind of cell/what attributes a cell has
 BLACK = (0 , 0, 0) #Wall
 WHITE = (255, 255, 255) #Empty
 GRAY = (128, 128, 128) #Grid Lines
@@ -28,42 +26,42 @@ class Cell:
         self.total_rows = total_rows
 
     #Gets the position of the cell
-    def get_pos(self):
+    def getPos(self):
         return self.row, self.col
     
     #Methods that check the type of cell
-    def is_closed(self):
+    def isClosed(self):
         return self.color == RED
     
-    def is_open(self):
+    def isOpen(self):
         return self.color == GREEN
     
-    def is_barrier(self):
+    def isWall(self):
         return self.color == BLACK
     
-    def is_start(self):
+    def isStart(self):
         return self.color == ORANGE
 
-    def is_end(self):
+    def isEnd(self):
         return self.color == PURPLE
 
     #Methods that set/make cells 
-    def make_closed(self):
+    def makeClosed(self):
         self.color = RED
     
-    def make_open(self):
+    def makeOpen(self):
         self.color = GREEN
     
-    def make_barrier(self):
+    def makeWall(self):
         self.color = BLACK
     
-    def make_start(self):
+    def makeStart(self):
         self.color = ORANGE
 
-    def make_end(self):
+    def makeEnd(self):
         self.color = PURPLE
     
-    def make_path(self):
+    def makePath(self):
         self.color = TURQUOISE
 
     #Resets cell back to empty/white
@@ -79,19 +77,19 @@ class Cell:
         self.neighbors = []
 
         #DOWN
-        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier():
+        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].isWall():
             self.neighbors.append(grid[self.row + 1][self.col])
 
         #UP
-        if self.row > 0 and not grid[self.row - 1][self.col].is_barrier():
+        if self.row > 0 and not grid[self.row - 1][self.col].isWall():
             self.neighbors.append(grid[self.row - 1][self.col])
         
         #RIGHT
-        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier():
+        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].isWall():
             self.neighbors.append(grid[self.row][self.col + 1])
 
         #LEFT
-        if self.row > 0 and not grid[self.row][self.col - 1].is_barrier():
+        if self.row > 0 and not grid[self.row][self.col - 1].isWall():
             self.neighbors.append(grid[self.row][self.col - 1])
 
     def __lt__(self, other):
@@ -107,7 +105,7 @@ def h(p1, p2):
 def reconstructPath(came_from, current, draw):
     while current in came_from:
         current = came_from[current]
-        current.make_path()
+        current.makePath()
         draw()
 
 #Algorithm Logic
@@ -117,10 +115,10 @@ def aStarAlgo(draw, grid, start, end):
     open_set.put((0, count, start))
     came_from = {}
 
-    g_score = {cell: float("inf") for row in grid for cell in row}
-    g_score[start] = 0
-    f_score = {cell: float("inf") for row in grid for cell in row}
-    f_score[start] = h(start.get_pos(), end.get_pos())
+    g = {cell: float("inf") for row in grid for cell in row}
+    g[start] = 0
+    f = {cell: float("inf") for row in grid for cell in row}
+    f[start] = h(start.getPos(), end.getPos())
 
     open_set_hash = {start}
 
@@ -136,26 +134,26 @@ def aStarAlgo(draw, grid, start, end):
         # Makes path if current cell is the end cell
         if current == end:
             reconstructPath(came_from, end, draw)
-            end.make_end()
+            end.makeEnd()
             return True
 
         for neighbor in current.neighbors:
-            temp_g_score = g_score[current] + 1
+            tempG = g[current] + 1
 
-            if temp_g_score < g_score[neighbor]:
+            if tempG < g[neighbor]:
                 came_from[neighbor] = current
-                g_score[neighbor] = temp_g_score
-                f_score[neighbor] = temp_g_score + h(neighbor.get_pos(), end.get_pos())
+                g[neighbor] = tempG
+                f[neighbor] = tempG + h(neighbor.getPos(), end.getPos())
                 if neighbor not in open_set_hash:
                     count += 1
-                    open_set.put((f_score[neighbor], count, neighbor))
+                    open_set.put((f[neighbor], count, neighbor))
                     open_set_hash.add(neighbor)
-                    neighbor.make_open()
+                    neighbor.makeOpen()
 
         draw()
 
         if current != start:
-            current.make_closed()
+            current.makeClosed()
 
     return False        
 
@@ -186,7 +184,7 @@ def draw(win, grid, rows, size):
     drawGrid(win, rows, size)
     pygame.display.update()
 
-def get_clicked_pos(pos, rows, size):
+def getClickedPosition(pos, rows, size):
     gap = size // rows
     y, x = pos
 
@@ -194,20 +192,16 @@ def get_clicked_pos(pos, rows, size):
     col = x // gap
     return row, col
 
-#MAIN LOOP
 def main(win, size):
-    ROWS = 50
-    grid = makeGrid(ROWS, size)
 
-    #Start/End Cells
-    start_cell = None
-    end_cell = None
-
+    rows = 50
+    grid = makeGrid(rows, size)
+    startCell = None
+    endCell = None
     run = True
 
-    #Main loop
     while run:
-        draw(win, grid, ROWS, size)
+        draw(win, grid, rows, size)
         #Checks for different types of events that may happen
         for event in pygame.event.get():
             #Quit Event
@@ -217,39 +211,39 @@ def main(win, size):
             #Left Mouse Click
             if pygame.mouse.get_pressed()[0]:
                 pos = pygame.mouse.get_pos()
-                row, col = get_clicked_pos(pos, ROWS, size)
+                row, col = getClickedPosition(pos, rows, size)
                 cell = grid[row][col]
 
                 #If Start cell does not exist, make it
-                if not start_cell and cell != end_cell:
-                    start_cell = cell
-                    start_cell.make_start()
+                if not startCell and cell != endCell:
+                    startCell = cell
+                    startCell.makeStart()
 
                 #If End cell does not exist, make it
-                elif not end_cell and cell != start_cell:
-                    end_cell = cell
-                    end_cell.make_end()
+                elif not endCell and cell != startCell:
+                    endCell = cell
+                    endCell.makeEnd()
 
                 #make barrier cells
-                elif cell != end_cell and cell != start_cell:
-                    cell.make_barrier()
+                elif cell != endCell and cell != startCell:
+                    cell.makeWall()
 
             #if the user clicks c clear the board
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_c:
-                    start_cell = None
-                    end_cell = None
+                    startCell = None
+                    endCell = None
                     for row in grid:
                         for cell in row:
                             cell.reset()
                             
             #SPACEBAR starts the pathfinding aStarAlgo
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and start_cell and end_cell:
+                if event.key == pygame.K_SPACE and startCell and endCell:
                     for row in grid:
                         for cell in row:
                             cell.update_neighbors(grid)
-                    aStarAlgo(lambda: draw(win, grid, ROWS, size), grid, start_cell, end_cell)
+                    aStarAlgo(lambda: draw(win, grid, rows, size), grid, startCell, endCell)
 
     pygame.quit()
-main(WIN, SIZE)
+main(WIN, 800)
