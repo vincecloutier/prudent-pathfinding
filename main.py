@@ -3,7 +3,6 @@ from queue import PriorityQueue
 
 BLACK = (0 , 0, 0) #Wall
 WHITE = (255, 255, 255) #Empty
-GRAY = (128, 128, 128) #Grid Lines
 RED = (255, 0 , 0) #Closed
 GREEN = (0, 255, 0) #Open
 ORANGE = (255, 165, 0) #Start
