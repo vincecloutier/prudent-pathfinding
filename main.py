@@ -1,13 +1,6 @@
 import pygame
 from queue import PriorityQueue
 
-BLACK = (0 , 0, 0) #Wall
-WHITE = (255, 255, 255) #Empty
-RED = (255, 0 , 0) #Closed
-GREEN = (0, 255, 0) #Open
-ORANGE = (255, 165, 0) #Start
-PURPLE = (128, 0 , 128) #End
-TURQUOISE = (64, 224, 208) #Path
 
 class Cell:
     def __init__(self, row, col, size):
@@ -15,37 +8,37 @@ class Cell:
         self.col = col
         self.x = row * size
         self.y = col * size
-        self.color = WHITE
+        self.color = (255, 255, 255)
         self.neighbours = []
         self.size = size
         self.totalRows = 50
 
     def makeClosed(self):
-        self.color = RED
+        self.color = (255, 0 , 0)
     def makeOpen(self):
-        self.color = GREEN
+        self.color = (0, 255, 0)
     def makeWall(self):
-        self.color = BLACK
+        self.color = (0 , 0, 0)
     def makeStart(self):
-        self.color = ORANGE
+        self.color = (255, 165, 0)
     def makeEnd(self):
-        self.color = PURPLE
+        self.color =  (128, 0 , 128)
     def makePath(self):
-        self.color = TURQUOISE
+        self.color = (64, 224, 208)
 
     def isClosed(self):
-        return self.color == RED
+        return self.color == (255, 0 , 0)
     def isOpen(self):
-        return self.color == GREEN
+        return self.color == (0, 255, 0)
     def isWall(self):
-        return self.color == BLACK
+        return self.color == (0 , 0, 0)
     def isStart(self):
-        return self.color == ORANGE
+        return self.color == (255, 165, 0)
     def isEnd(self):
-        return self.color == PURPLE
+        return self.color ==  (128, 0 , 128)
 
     def reset(self):
-        self.color = WHITE
+        self.color = (255, 255, 255)
     def draw(self, window):
         pygame.draw.rect(window, self.color, (self.x, self.y, self.size, self.size))
     def getPos(self):
@@ -66,11 +59,6 @@ def h(p1, p2):
     x2, y2 = p2
     return abs(x1 - x2) + abs(y1 - y2)
 
-def reconstructPath(cameFrom, current, draw):
-    while current in cameFrom:
-        current = cameFrom[current]
-        current.makePath()
-        draw()
 
 def algorithm(draw, grid, start, end):
     count = 0
@@ -88,7 +76,10 @@ def algorithm(draw, grid, start, end):
         current = openSet.get()[2]
         openSetHash.remove(current)
         if current == end:
-            reconstructPath(cameFrom, end, draw)
+            while end in cameFrom:
+                end = cameFrom[end]
+                end.makePath()
+                draw()
             end.makeEnd()
             return True
         for neighbour in current.neighbours:
@@ -119,22 +110,16 @@ def makeGrid():
 
 def draw(window, grid):
     gap = 800 // 50
-    window.fill(WHITE)
+    window.fill((255, 255, 255))
     for row in grid:
         for cell in row:
             cell.draw(window)
     for i in range(50):
-        pygame.draw.line(window, BLACK, (0, i * gap), (800, i * gap))
+        pygame.draw.line(window, (0 , 0, 0), (0, i * gap), (800, i * gap))
         for j in range(50):
-            pygame.draw.line(window, BLACK, (j * gap, 0), (j * gap, 800))
+            pygame.draw.line(window, (0 , 0, 0), (j * gap, 0), (j * gap, 800))
     pygame.display.update()
 
-def getClickedPosition(pos):
-    gap = 800 // 50
-    y, x = pos
-    row = y // gap
-    col = x // gap
-    return row, col
 
 def main():
     window = pygame.display.set_mode((800, 800))
@@ -147,7 +132,10 @@ def main():
         draw(window, grid)
         for event in pygame.event.get():
             if pygame.mouse.get_pressed()[0]:
-                row, col = getClickedPosition(pygame.mouse.get_pos())
+                gap = 800 // 50
+                y, x = pygame.mouse.get_pos()
+                row = y // gap
+                col = x // gap
                 cell = grid[row][col]
                 if not startCell and cell != endCell:
                     startCell = cell
