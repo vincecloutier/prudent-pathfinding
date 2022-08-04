@@ -1,7 +1,6 @@
 import pygame
 from queue import PriorityQueue
 
-
 class Cell:
     def __init__(self, row, col, size):
         self.row = row
@@ -58,7 +57,6 @@ def h(p1, p2):
     x1, y1 = p1
     x2, y2 = p2
     return abs(x1 - x2) + abs(y1 - y2)
-
 
 def algorithm(draw, grid, start, end):
     count = 0
@@ -119,7 +117,6 @@ def draw(window, grid):
         for j in range(50):
             pygame.draw.line(window, (0 , 0, 0), (j * gap, 0), (j * gap, 800))
     pygame.display.update()
-
 
 def main():
     window = pygame.display.set_mode((800, 800))
