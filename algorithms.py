@@ -1,5 +1,6 @@
 from queue import PriorityQueue
 
+# Heuristic functions
 def manhattan_distance(p1, p2):
     x1, y1 = p1
     x2, y2 = p2
@@ -16,7 +17,7 @@ def greedy_priority(_, h, node):
     return h[node]
 
 # Pathfinder algorithm
-def pathfinder(draw, grid, start, end, priority_fn):
+def pathfinder(draw, grid, start, end, heuristic_fn, priority_fn):
     count = 0
     openSet = PriorityQueue()
     openSet.put((0, count, start))
@@ -26,7 +27,7 @@ def pathfinder(draw, grid, start, end, priority_fn):
     g = {cell: float("inf") for row in grid for cell in row}
     g[start] = 0
     h = {cell: float("inf") for row in grid for cell in row}
-    h[start] = manhattan_distance(start.getPos(), end.getPos())
+    h[start] = heuristic_fn(start.getPos(), end.getPos())
 
     while not openSet.empty():
         current = openSet.get()[2]
@@ -47,7 +48,7 @@ def pathfinder(draw, grid, start, end, priority_fn):
                 g[neighbour] = tempG
                 if neighbour not in openSetHash:
                     count += 1
-                    h[neighbour] = manhattan_distance(neighbour.getPos(), end.getPos())
+                    h[neighbour] = heuristic_fn(neighbour.getPos(), end.getPos())
                     priority = priority_fn(g, h, neighbour)
                     openSet.put((priority, count, neighbour))
                     openSetHash.add(neighbour)

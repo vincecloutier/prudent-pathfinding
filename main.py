@@ -1,7 +1,7 @@
 import pygame
 from constants import *
 from helpers import make_grid, draw, reset_grid, handle_mouse_click
-from algorithms import pathfinder, astar_priority, dijkstra_priority, greedy_priority
+from algorithms import pathfinder, astar_priority, dijkstra_priority, greedy_priority, manhattan_distance
 
 if __name__ == "__main__":
     pygame.init()
@@ -27,11 +27,11 @@ if __name__ == "__main__":
                                 for cell in row:
                                     cell.updateNeighbours(grid)
                             if button.text == 'A*' and startCell and endCell:
-                                pathfinder(lambda: draw(window, grid), grid, startCell, endCell, astar_priority)
+                                pathfinder(lambda: draw(window, grid), grid, startCell, endCell, manhattan_distance, astar_priority)
                             elif button.text == 'Dijkstra' and startCell and endCell:
-                                pathfinder(lambda: draw(window, grid), grid, startCell, endCell, dijkstra_priority)
+                                pathfinder(lambda: draw(window, grid), grid, startCell, endCell, manhattan_distance, dijkstra_priority)
                             elif button.text == 'Greedy' and startCell and endCell:
-                                pathfinder(lambda: draw(window, grid), grid, startCell, endCell, greedy_priority)
+                                pathfinder(lambda: draw(window, grid), grid, startCell, endCell, manhattan_distance, greedy_priority)
                             elif button.text == 'Reset':
                                 startCell, endCell = reset_grid(grid)
             elif event.type == pygame.MOUSEMOTION:  # added event
