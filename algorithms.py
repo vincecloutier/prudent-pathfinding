@@ -12,6 +12,9 @@ def astar_priority(g, h, node):
 def dijkstra_priority(g, _, node):
     return g[node]
 
+def greedy_priority(_, h, node):
+    return h[node]
+
 # Pathfinder algorithm
 def pathfinder(draw, grid, start, end, priority_fn):
     count = 0

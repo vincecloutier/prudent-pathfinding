@@ -15,7 +15,7 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 run = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and startCell and endCell:
+                if event.key == pygame.K_a and startCell and endCell:
                     pathfinding(window, grid, startCell, endCell, 'astar')
                 elif event.key == pygame.K_d and startCell and endCell:
                     pathfinding(window, grid, startCell, endCell, 'dijkstra')

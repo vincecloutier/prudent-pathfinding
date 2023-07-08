@@ -46,7 +46,7 @@ class Cell:
         self.neighbours = []
         if self.row < self.totalRows - 1 and not grid[self.row + 1][self.col].isWall(): #DOWN
             self.neighbours.append(grid[self.row + 1][self.col])
-        if self.row > 0 and not grid[self.row - 1][self.col].isWall():  #UP
+        if self.row > 0 and not grid[self.row - 1][self.col].isWall(): #UP
             self.neighbours.append(grid[self.row - 1][self.col])
         if self.col < self.totalRows - 1 and not grid[self.row][self.col + 1].isWall(): #RIGHT
             self.neighbours.append(grid[self.row][self.col + 1])
