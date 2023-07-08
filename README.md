@@ -1,5 +1,6 @@
 # TODO
 - refactor everything
-- add more algorithms
-- beef up UI to let user pick algo
+- add tests for all 4 algos
+- beef up UI
+- make the window have a hard boundary 
 - make a demo file and a gif for readme
