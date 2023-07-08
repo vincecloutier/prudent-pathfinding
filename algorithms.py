@@ -39,3 +39,44 @@ def astar(draw, grid, start, end):
         if current != start:
             current.makeClosed()
     return False        
+
+
+# Dijkstra's algorithm
+def dijkstra(draw, grid, start, end):
+    count = 0
+    openSet = PriorityQueue()
+    openSet.put((0, count, start))
+    openSetHash = {start}
+    cameFrom = {}
+
+    g = {cell: float("inf") for row in grid for cell in row}
+    g[start] = 0
+
+    while not openSet.empty():
+        current = openSet.get()[2]
+        openSetHash.remove(current)
+        if current == end:
+            while end in cameFrom:
+                end = cameFrom[end]
+                end.makePath()
+                draw()
+            end.makeEnd()
+            return True
+        for neighbour in current.neighbours:
+            tempG = g[current] + 1
+            if tempG < g[neighbour]:
+                cameFrom[neighbour] = current
+                g[neighbour] = tempG
+                if neighbour not in openSetHash:
+                    count += 1
+                    openSet.put((g[neighbour], count, neighbour))
+                    openSetHash.add(neighbour)
+                    neighbour.makeOpen()
+        draw()
+        if current != start:
+            current.makeClosed()
+    return False
+
+# Breadth-first search
+def bfs(draw, grid, start, end):
+    
