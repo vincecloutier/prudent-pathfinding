@@ -30,9 +30,6 @@ def astar(draw, grid, start, end, grid_width, grid_height):
             end.makeEnd()
             return True
         for neighbour in current.neighbours:
-            x, y = neighbour.getPos()
-            if x < 0 or y < 0 or x >= grid_width or y >= grid_height:
-                continue
             tempG = g[current] + 1
             if tempG < g[neighbour]:
                 cameFrom[neighbour] = current
@@ -70,9 +67,6 @@ def dijkstra(draw, grid, start, end, grid_width, grid_height):
             end.makeEnd()
             return True
         for neighbour in current.neighbours:
-            x, y = neighbour.getPos()
-            if x < 0 or y < 0 or x >= grid_width or y >= grid_height:
-                continue
             tempG = g[current] + 1
             if tempG < g[neighbour]:
                 cameFrom[neighbour] = current
