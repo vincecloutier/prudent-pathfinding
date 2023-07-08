@@ -30,4 +30,9 @@ if __name__ == "__main__":
                                 pathfinding(window, grid, startCell, endCell, 'greedy')
                             elif button.text == 'Reset':
                                 startCell, endCell = reset_grid(grid)
+            elif event.type == pygame.MOUSEMOTION:  # added event
+                if pygame.mouse.get_pressed()[0]:  # check if left button is held down
+                    pos = pygame.mouse.get_pos()
+                    if pos[1] < SCREEN_HEIGHT - BUTTON_HEIGHT:  # restrict cell selection to grid area
+                        startCell, endCell = handle_mouse_click(grid, startCell, endCell, True)  # draw walls only
     pygame.quit()

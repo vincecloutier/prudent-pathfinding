@@ -67,21 +67,38 @@ def draw(window, grid):
         button.draw(window)
     pygame.display.update()
 
-def handle_mouse_click(grid, startCell, endCell):
-    if pygame.mouse.get_pressed()[0]:
-        y, x = pygame.mouse.get_pos()
-        if y < SCREEN_HEIGHT - BUTTON_HEIGHT:  # restrict cell selection to grid area
-            row = y // GAP
-            col = x // GAP
-            cell = grid[row][col]
-            if not startCell and cell != endCell:
-                startCell = cell
-                startCell.makeStart()
-            elif not endCell and cell != startCell:
-                endCell = cell
-                endCell.makeEnd()
-            elif cell != endCell and cell != startCell:
-                cell.makeWall()
+# def handle_mouse_click(grid, startCell, endCell):
+#     if pygame.mouse.get_pressed()[0]:
+#         y, x = pygame.mouse.get_pos()
+#         if y < SCREEN_HEIGHT - BUTTON_HEIGHT:  # restrict cell selection to grid area
+#             row = y // GAP
+#             col = x // GAP
+#             cell = grid[row][col]
+#             if not startCell and cell != endCell:
+#                 startCell = cell
+#                 startCell.makeStart()
+#             elif not endCell and cell != startCell:
+#                 endCell = cell
+#                 endCell.makeEnd()
+#             elif cell != endCell and cell != startCell:
+#                 cell.makeWall()
+#     return startCell, endCell
+
+
+def handle_mouse_click(grid, startCell, endCell, wall_only = False):
+    y, x = pygame.mouse.get_pos()
+    row = y // GAP
+    col = x // GAP
+    cell = grid[row][col]
+    if not wall_only:
+        if not startCell and cell != endCell:
+            startCell = cell
+            startCell.makeStart()
+        elif not endCell and cell != startCell:
+            endCell = cell
+            endCell.makeEnd()
+    if cell != endCell and cell != startCell:
+        cell.makeWall()
     return startCell, endCell
 
 def reset_grid(grid):
