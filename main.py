@@ -1,6 +1,7 @@
 import pygame
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, BUTTON_HEIGHT 
-from guihelpers import BUTTONS, pathfinding, make_grid, draw, reset_grid, handle_mouse_click
+from constants import *
+from helpers import make_grid, draw, reset_grid, handle_mouse_click
+from algorithms import pathfinder, astar_priority, dijkstra_priority, greedy_priority
 
 if __name__ == "__main__":
     pygame.init()
@@ -22,12 +23,15 @@ if __name__ == "__main__":
                 else:
                     for button in BUTTONS:
                         if button.isOver(pos):
+                            for row in grid:
+                                for cell in row:
+                                    cell.updateNeighbours(grid)
                             if button.text == 'A*' and startCell and endCell:
-                                pathfinding(window, grid, startCell, endCell, 'astar')
+                                pathfinder(lambda: draw(window, grid), grid, startCell, endCell, astar_priority)
                             elif button.text == 'Dijkstra' and startCell and endCell:
-                                pathfinding(window, grid, startCell, endCell, 'dijkstra')
+                                pathfinder(lambda: draw(window, grid), grid, startCell, endCell, dijkstra_priority)
                             elif button.text == 'Greedy' and startCell and endCell:
-                                pathfinding(window, grid, startCell, endCell, 'greedy')
+                                pathfinder(lambda: draw(window, grid), grid, startCell, endCell, greedy_priority)
                             elif button.text == 'Reset':
                                 startCell, endCell = reset_grid(grid)
             elif event.type == pygame.MOUSEMOTION:  # added event

@@ -1,5 +1,6 @@
 import pygame
-from constants import COLOURS, GRID_COLUMNS
+from constants import *
+
 class Cell:
     def __init__(self, row, col, size):
         self.row = row
