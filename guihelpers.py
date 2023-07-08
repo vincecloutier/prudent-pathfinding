@@ -1,6 +1,6 @@
 import pygame
 from cell import Cell
-from algorithms import astar, dijkstra
+from algorithms import pathfinder, astar_priority, dijkstra_priority
 from constants import SCREENHEIGHT, SCREENWIDTH, GRID_WIDTH, GRID_HEIGHT, GAP, COLOURS
 
 def makeGrid():
@@ -52,6 +52,6 @@ def pathfinding(window, grid, startCell, endCell, algorithm):
         for cell in row:
             cell.updateNeighbours(grid)
     if algorithm == 'astar':
-        astar(lambda: draw(window, grid), grid, startCell, endCell)
+        pathfinder(lambda: draw(window, grid), grid, startCell, endCell, astar_priority)
     elif algorithm == 'dijkstra':
-        dijkstra(lambda: draw(window, grid), grid, startCell, endCell)
+        pathfinder(lambda: draw(window, grid), grid, startCell, endCell, dijkstra_priority)
