@@ -29,9 +29,18 @@ This priority function could lead to interesting behavior because it multiplies 
 
 ### Create Your Own Heuristic Function
 Heuristic functions provide an estimate of the distance from a given cell to the target cell. <br>
-In the file where the existing priority functions are defined (`algorithms.py`), define a new function. This function should take three arguments:
+In the file where the existing heuristic functions are defined (`algorithms.py`), define a new function. This function should take three arguments:
 - `p1`: a tuple representing the (x, y) coordinates of the first cell.
 - `p2`: a tuple representing the (x, y) coordinates of the second cell.
 Your function should return a number that represents the estimated distance from p1 to p2. <br>
+
+Here's another sample of an unusual function:
+```
+def unusual_heuristic(p1, p2):
+    x1, _ = p1
+    x2, _ = p2
+    return abs(x1 - x2)
+```
+This heuristic distance function only cares about the x-axis, so our the pathfinding algorithm would explore cells more aggressively in the horizontal direction, aiming to align the x-coordinate of the current cell with the x-coordinate of the target cell as quickly as possible. 
 
 Remember that the success of these functions might depend heavily on the nature of the grid and the start/end points. <br>
