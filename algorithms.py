@@ -6,10 +6,10 @@ def manhattan_distance(p1, p2):
     return abs(x1 - x2) + abs(y1 - y2)
 
 # Priority functions
-def astar_priority(g, h, node, end):
+def astar_priority(g, h, node):
     return g[node] + h[node]
 
-def dijkstra_priority(g, _, node, __):
+def dijkstra_priority(g, _, node):
     return g[node]
 
 # Pathfinder algorithm
@@ -45,7 +45,7 @@ def pathfinder(draw, grid, start, end, priority_fn):
                 if neighbour not in openSetHash:
                     count += 1
                     h[neighbour] = manhattan_distance(neighbour.getPos(), end.getPos())
-                    priority = priority_fn(g, h, neighbour, end)
+                    priority = priority_fn(g, h, neighbour)
                     openSet.put((priority, count, neighbour))
                     openSetHash.add(neighbour)
                     neighbour.makeOpen()
