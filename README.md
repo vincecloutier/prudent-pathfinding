@@ -1,4 +1,4 @@
 # TODO
 - beef up UI
-- add dfs
-- make a demo file and a gif for readme
+- include super readme
+- make a demo gif for readme

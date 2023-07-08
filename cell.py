@@ -1,5 +1,5 @@
 import pygame
-from constants import COLOURS, GRID_WIDTH
+from constants import COLOURS, GRID_COLUMNS
 class Cell:
     def __init__(self, row, col, size):
         self.row = row
@@ -9,7 +9,7 @@ class Cell:
         self.color = COLOURS['WHITE']
         self.neighbours = []
         self.size = size
-        self.totalRows = GRID_WIDTH
+        self.totalRows = GRID_COLUMNS
 
     def makeClosed(self):
         self.color = COLOURS['RED']

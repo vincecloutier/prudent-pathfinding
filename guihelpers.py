@@ -1,13 +1,13 @@
 import pygame
 from cell import Cell
 from algorithms import pathfinder, astar_priority, dijkstra_priority
-from constants import SCREENHEIGHT, SCREENWIDTH, GRID_WIDTH, GRID_HEIGHT, GAP, COLOURS
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH, GRID_COLUMNS, GRID_ROWS, GAP, COLOURS
 
 def makeGrid():
     grid = []
-    for i in range(GRID_WIDTH):
+    for i in range(GRID_COLUMNS):
         grid.append([])
-        for j in range(GRID_HEIGHT):
+        for j in range(GRID_ROWS):
             cell = Cell(i , j, GAP)
             grid[i].append(cell)
     return grid
@@ -17,10 +17,10 @@ def draw(window, grid):
     for row in grid:
         for cell in row:
             cell.draw(window)
-    for i in range(GRID_WIDTH):
-        pygame.draw.line(window, COLOURS['BLACK'], (0, i * GAP), (SCREENWIDTH, i * GAP))
-        for j in range(GRID_HEIGHT):
-            pygame.draw.line(window, COLOURS['BLACK'], (j * GAP, 0), (j * GAP, SCREENHEIGHT))
+    for i in range(GRID_COLUMNS):
+        pygame.draw.line(window, COLOURS['BLACK'], (0, i * GAP), (SCREEN_WIDTH, i * GAP))
+        for j in range(GRID_ROWS):
+            pygame.draw.line(window, COLOURS['BLACK'], (j * GAP, 0), (j * GAP, SCREEN_HEIGHT))
     pygame.display.update()
 
 def handle_mouse_click(grid, startCell, endCell):
