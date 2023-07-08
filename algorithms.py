@@ -1,5 +1,4 @@
 from queue import PriorityQueue
-from helpers import h
 
 # A* algorithm
 def astar(draw, grid, start, end):
@@ -129,3 +128,8 @@ def dfs(draw, grid, start, end):
             current.makeClosed()
     return False
 
+# Helpers
+def h(p1, p2):
+    x1, y1 = p1
+    x2, y2 = p2
+    return abs(x1 - x2) + abs(y1 - y2)

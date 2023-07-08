@@ -40,6 +40,7 @@ class Cell:
         pygame.draw.rect(window, self.color, (self.x, self.y, self.size, self.size))
     def getPos(self):
         return self.row, self.col
+    
     def updateNeighbours(self, grid):
         self.neighbours = []
         if self.row < self.totalRows - 1 and not grid[self.row + 1][self.col].isWall(): #DOWN
