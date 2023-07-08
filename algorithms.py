@@ -7,7 +7,7 @@ def h(p1, p2):
     return abs(x1 - x2) + abs(y1 - y2)
 
 # A* algorithm
-def astar(draw, grid, start, end, grid_width, grid_height):
+def astar(draw, grid, start, end):
     count = 0
     openSet = PriorityQueue()
     openSet.put((0, count, start))
@@ -22,6 +22,7 @@ def astar(draw, grid, start, end, grid_width, grid_height):
     while not openSet.empty():
         current = openSet.get()[2]
         openSetHash.remove(current)
+        
         if current == end:
             while end in cameFrom:
                 end = cameFrom[end]
@@ -29,6 +30,7 @@ def astar(draw, grid, start, end, grid_width, grid_height):
                 draw()
             end.makeEnd()
             return True
+        
         for neighbour in current.neighbours:
             tempG = g[current] + 1
             if tempG < g[neighbour]:
@@ -46,7 +48,7 @@ def astar(draw, grid, start, end, grid_width, grid_height):
     return False 
 
 # Dijkstra's algorithm
-def dijkstra(draw, grid, start, end, grid_width, grid_height):
+def dijkstra(draw, grid, start, end):
     count = 0
     openSet = PriorityQueue()
     openSet.put((0, count, start))
@@ -59,6 +61,7 @@ def dijkstra(draw, grid, start, end, grid_width, grid_height):
     while not openSet.empty():
         current = openSet.get()[2]
         openSetHash.remove(current)
+
         if current == end:
             while end in cameFrom:
                 end = cameFrom[end]
@@ -66,6 +69,7 @@ def dijkstra(draw, grid, start, end, grid_width, grid_height):
                 draw()
             end.makeEnd()
             return True
+        
         for neighbour in current.neighbours:
             tempG = g[current] + 1
             if tempG < g[neighbour]:

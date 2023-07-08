@@ -1,8 +1,9 @@
 import pygame
+from constants import SCREENWIDTH, SCREENHEIGHT
 from guihelpers import makeGrid, draw, handle_mouse_click, reset_grid, pathfinding
 
 if __name__ == "__main__":
-    window = pygame.display.set_mode((800, 800))
+    window = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
     pygame.display.set_caption("Pathfinding Visualizer")
     grid = makeGrid()
     startCell = None
