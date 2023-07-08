@@ -1,5 +1,17 @@
 from queue import PriorityQueue
 
+# Manhattan distance
+# def h(p1, p2):
+#     x1, y1 = p1
+#     x2, y2 = p2
+#     return abs(x1 - x2) + abs(y1 - y2)
+
+# Euclidean distance
+def h(p1, p2):
+    x1, y1 = p1
+    x2, y2 = p2
+    return ((x1 - x2)**2 + (y1 - y2)**2)**0.5
+
 # A* algorithm
 def astar(draw, grid, start, end):
     count = 0
@@ -39,7 +51,6 @@ def astar(draw, grid, start, end):
             current.makeClosed()
     return False        
 
-
 # Dijkstra's algorithm
 def dijkstra(draw, grid, start, end):
     count = 0
@@ -76,60 +87,3 @@ def dijkstra(draw, grid, start, end):
             current.makeClosed()
     return False
 
-# Breadth-first search
-def bfs(draw, grid, start, end):
-    queue = [start]
-    visited = {start}
-    cameFrom = {}
-
-    while queue:
-        current = queue.pop(0)
-        if current == end:
-            while end in cameFrom:
-                end = cameFrom[end]
-                end.makePath()
-                draw()
-            end.makeEnd()
-            return True
-        for neighbour in current.neighbours:
-            if neighbour not in visited:
-                cameFrom[neighbour] = current
-                visited.add(neighbour)
-                queue.append(neighbour)
-                neighbour.makeOpen()
-        draw()
-        if current != start:
-            current.makeClosed()
-    return False
-
-# Depth-first search
-def dfs(draw, grid, start, end):
-    stack = [start]
-    visited = {start}
-    cameFrom = {}
-
-    while stack:
-        current = stack.pop()
-        if current == end:
-            while end in cameFrom:
-                end = cameFrom[end]
-                end.makePath()
-                draw()
-            end.makeEnd()
-            return True
-        for neighbour in current.neighbours:
-            if neighbour not in visited:
-                cameFrom[neighbour] = current
-                visited.add(neighbour)
-                stack.append(neighbour)
-                neighbour.makeOpen()
-        draw()
-        if current != start:
-            current.makeClosed()
-    return False
-
-# Helpers
-def h(p1, p2):
-    x1, y1 = p1
-    x2, y2 = p2
-    return abs(x1 - x2) + abs(y1 - y2)
