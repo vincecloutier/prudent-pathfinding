@@ -79,4 +79,30 @@ def dijkstra(draw, grid, start, end):
 
 # Breadth-first search
 def bfs(draw, grid, start, end):
+    queue = [start]
+    visited = {start}
+    cameFrom = {}
+
+    while queue:
+        current = queue.pop(0)
+        if current == end:
+            while end in cameFrom:
+                end = cameFrom[end]
+                end.makePath()
+                draw()
+            end.makeEnd()
+            return True
+        for neighbour in current.neighbours:
+            if neighbour not in visited:
+                cameFrom[neighbour] = current
+                visited.add(neighbour)
+                queue.append(neighbour)
+                neighbour.makeOpen()
+        draw()
+        if current != start:
+            current.makeClosed()
+    return False
+
+# Depth-first search
+def dfs(draw, grid, start, end):
     
