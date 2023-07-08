@@ -18,12 +18,7 @@ if __name__ == "__main__":
                     pathfinding(window, grid, startCell, endCell, 'astar')
                 elif event.key == pygame.K_d and startCell and endCell:
                     pathfinding(window, grid, startCell, endCell, 'dijkstra')
-                elif event.key == pygame.K_b and startCell and endCell:
-                    pathfinding(window, grid, startCell, endCell, 'bfs')
-                elif event.key == pygame.K_f and startCell and endCell:
-                    pathfinding(window, grid, startCell, endCell, 'dfs')
                 elif event.key == pygame.K_c:
                     startCell, endCell = reset_grid(grid)
-
         startCell, endCell = handle_mouse_click(grid, startCell, endCell)
     pygame.quit()

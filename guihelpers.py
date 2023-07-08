@@ -1,6 +1,6 @@
 import pygame
 from cell import Cell
-from algorithms import astar, dijkstra, bfs, dfs
+from algorithms import astar, dijkstra
 
 def makeGrid():
     grid = []
@@ -53,12 +53,7 @@ def pathfinding(window, grid, startCell, endCell, algorithm):
     for row in grid:
         for cell in row:
             cell.updateNeighbours(grid)
-
     if algorithm == 'astar':
         astar(lambda: draw(window, grid), grid, startCell, endCell)
     elif algorithm == 'dijkstra':
         dijkstra(lambda: draw(window, grid), grid, startCell, endCell)
-    elif algorithm == 'bfs':
-        bfs(lambda: draw(window, grid), grid, startCell, endCell)
-    elif algorithm == 'dfs':
-        dfs(lambda: draw(window, grid), grid, startCell, endCell)
