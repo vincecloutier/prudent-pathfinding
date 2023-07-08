@@ -1,5 +1,5 @@
 import pygame
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, BUTTON_HEIGHT 
 from guihelpers import BUTTONS, pathfinding, make_grid, draw, reset_grid, handle_mouse_click
 
 if __name__ == "__main__":
@@ -17,7 +17,7 @@ if __name__ == "__main__":
                 run = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
-                if pos[1] < SCREEN_HEIGHT - 200:  # restrict cell selection to grid area
+                if pos[1] < SCREEN_HEIGHT - BUTTON_HEIGHT:  # restrict cell selection to grid area
                     startCell, endCell = handle_mouse_click(grid, startCell, endCell)
                 else:
                     for button in BUTTONS:
@@ -26,6 +26,8 @@ if __name__ == "__main__":
                                 pathfinding(window, grid, startCell, endCell, 'astar')
                             elif button.text == 'Dijkstra' and startCell and endCell:
                                 pathfinding(window, grid, startCell, endCell, 'dijkstra')
+                            elif button.text == 'Greedy' and startCell and endCell:
+                                pathfinding(window, grid, startCell, endCell, 'greedy')
                             elif button.text == 'Reset':
                                 startCell, endCell = reset_grid(grid)
     pygame.quit()
