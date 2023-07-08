@@ -2,34 +2,34 @@ import pygame
 from cell import Cell
 from algorithms import astar, dijkstra
 
+GRID_WIDTH, GRID_HEIGHT = 50, 50
+GAP = 800 // GRID_WIDTH
+
 def makeGrid():
     grid = []
-    gap = 800 // 50
-    for i in range(50):
+    for i in range(GRID_WIDTH):
         grid.append([])
-        for j in range(50):
-            cell = Cell(i , j, gap)
+        for j in range(GRID_HEIGHT):
+            cell = Cell(i , j, GAP)
             grid[i].append(cell)
     return grid
 
 def draw(window, grid):
-    gap = 800 // 50
     window.fill((255, 255, 255))
     for row in grid:
         for cell in row:
             cell.draw(window)
     for i in range(50):
-        pygame.draw.line(window, (0 , 0, 0), (0, i * gap), (800, i * gap))
+        pygame.draw.line(window, (0 , 0, 0), (0, i * GAP), (800, i * GAP))
         for j in range(50):
-            pygame.draw.line(window, (0 , 0, 0), (j * gap, 0), (j * gap, 800))
+            pygame.draw.line(window, (0 , 0, 0), (j * GAP, 0), (j * GAP, 800))
     pygame.display.update()
 
 def handle_mouse_click(grid, startCell, endCell):
     if pygame.mouse.get_pressed()[0]:
-        gap = 800 // 50
         y, x = pygame.mouse.get_pos()
-        row = y // gap
-        col = x // gap
+        row = y // GAP
+        col = x // GAP
         cell = grid[row][col]
         if not startCell and cell != endCell:
             startCell = cell
@@ -54,6 +54,6 @@ def pathfinding(window, grid, startCell, endCell, algorithm):
         for cell in row:
             cell.updateNeighbours(grid)
     if algorithm == 'astar':
-        astar(lambda: draw(window, grid), grid, startCell, endCell)
+        astar(lambda: draw(window, grid), grid, startCell, endCell, GRID_WIDTH, GRID_HEIGHT)
     elif algorithm == 'dijkstra':
-        dijkstra(lambda: draw(window, grid), grid, startCell, endCell)
+        dijkstra(lambda: draw(window, grid), grid, startCell, endCell, GRID_WIDTH, GRID_HEIGHT)

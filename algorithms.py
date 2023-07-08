@@ -1,19 +1,13 @@
 from queue import PriorityQueue
 
 # Manhattan distance
-# def h(p1, p2):
-#     x1, y1 = p1
-#     x2, y2 = p2
-#     return abs(x1 - x2) + abs(y1 - y2)
-
-# Euclidean distance
 def h(p1, p2):
     x1, y1 = p1
     x2, y2 = p2
-    return ((x1 - x2)**2 + (y1 - y2)**2)**0.5
+    return abs(x1 - x2) + abs(y1 - y2)
 
 # A* algorithm
-def astar(draw, grid, start, end):
+def astar(draw, grid, start, end, grid_width, grid_height):
     count = 0
     openSet = PriorityQueue()
     openSet.put((0, count, start))
@@ -36,6 +30,9 @@ def astar(draw, grid, start, end):
             end.makeEnd()
             return True
         for neighbour in current.neighbours:
+            x, y = neighbour.getPos()
+            if x < 0 or y < 0 or x >= grid_width or y >= grid_height:
+                continue
             tempG = g[current] + 1
             if tempG < g[neighbour]:
                 cameFrom[neighbour] = current
@@ -49,10 +46,10 @@ def astar(draw, grid, start, end):
         draw()
         if current != start:
             current.makeClosed()
-    return False        
+    return False 
 
 # Dijkstra's algorithm
-def dijkstra(draw, grid, start, end):
+def dijkstra(draw, grid, start, end, grid_width, grid_height):
     count = 0
     openSet = PriorityQueue()
     openSet.put((0, count, start))
@@ -73,6 +70,9 @@ def dijkstra(draw, grid, start, end):
             end.makeEnd()
             return True
         for neighbour in current.neighbours:
+            x, y = neighbour.getPos()
+            if x < 0 or y < 0 or x >= grid_width or y >= grid_height:
+                continue
             tempG = g[current] + 1
             if tempG < g[neighbour]:
                 cameFrom[neighbour] = current
@@ -86,4 +86,3 @@ def dijkstra(draw, grid, start, end):
         if current != start:
             current.makeClosed()
     return False
-
