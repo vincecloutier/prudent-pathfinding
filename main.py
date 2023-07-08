@@ -1,6 +1,6 @@
 import pygame
 from cell import Cell
-from algorithms import astar
+from algorithms import astar, dijkstra, bfs, dfs
 
 def makeGrid():
     grid = []
@@ -24,9 +24,49 @@ def draw(window, grid):
             pygame.draw.line(window, (0 , 0, 0), (j * gap, 0), (j * gap, 800))
     pygame.display.update()
 
+def handle_mouse_click(grid, startCell, endCell):
+    if pygame.mouse.get_pressed()[0]:
+        gap = 800 // 50
+        y, x = pygame.mouse.get_pos()
+        row = y // gap
+        col = x // gap
+        cell = grid[row][col]
+        if not startCell and cell != endCell:
+            startCell = cell
+            startCell.makeStart()
+        elif not endCell and cell != startCell:
+            endCell = cell
+            endCell.makeEnd()
+        elif cell != endCell and cell != startCell:
+            cell.makeWall()
+    return startCell, endCell
+
+def reset_grid(grid):
+    startCell = None
+    endCell = None
+    for row in grid:
+        for cell in row:
+            cell.reset()
+    return startCell, endCell
+
+def pathfinding(window, grid, startCell, endCell, algorithm):
+    for row in grid:
+        for cell in row:
+            cell.updateNeighbours(grid)
+
+    if algorithm == 'astar':
+        astar(lambda: draw(window, grid), grid, startCell, endCell)
+    elif algorithm == 'dijkstra':
+        dijkstra(lambda: draw(window, grid), grid, startCell, endCell)
+    elif algorithm == 'bfs':
+        bfs(lambda: draw(window, grid), grid, startCell, endCell)
+    elif algorithm == 'dfs':
+        dfs(lambda: draw(window, grid), grid, startCell, endCell)
+
+
 def main():
     window = pygame.display.set_mode((800, 800))
-    pygame.display.set_caption("A* Visualizer")
+    pygame.display.set_caption("Pathfinding Visualizer")
     grid = makeGrid()
     startCell = None
     endCell = None
@@ -34,34 +74,17 @@ def main():
     while run:
         draw(window, grid)
         for event in pygame.event.get():
-            if pygame.mouse.get_pressed()[0]:
-                gap = 800 // 50
-                y, x = pygame.mouse.get_pos()
-                row = y // gap
-                col = x // gap
-                cell = grid[row][col]
-                if not startCell and cell != endCell:
-                    startCell = cell
-                    startCell.makeStart()
-                elif not endCell and cell != startCell:
-                    endCell = cell
-                    endCell.makeEnd()
-                elif cell != endCell and cell != startCell:
-                    cell.makeWall()                         
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and startCell and endCell:
-                    for row in grid:
-                        for cell in row:
-                            cell.updateNeighbours(grid)
-                    astar(lambda: draw(window, grid), grid, startCell, endCell)
-                if event.key == pygame.K_c:
-                    startCell = None
-                    endCell = None
-                    for row in grid:
-                        for cell in row:
-                            cell.reset()
             if event.type == pygame.QUIT:
                 run = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and startCell and endCell:
+                    pathfinding(window, grid, startCell, endCell, 'astar')
+                elif event.key == pygame.K_d and startCell and endCell:
+                    pathfinding(window, grid, startCell, endCell, 'dijkstra')
+                elif event.key == pygame.K_c:
+                    startCell, endCell = reset_grid(grid)
+
+        startCell, endCell = handle_mouse_click(grid, startCell, endCell)
     pygame.quit()
 
 if __name__ == "__main__":
